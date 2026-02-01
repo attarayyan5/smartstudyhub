@@ -1,0 +1,385 @@
+## 1. Title Page
+
+**Project Title:** SmartStudy Hub – A Web-Based Study Planner and Habit Tracker  
+
+**Technologies Used:** HTML, CSS, JavaScript, PHP, MySQL  
+
+**Submitted by:** *[Your Name, Roll No., Class]*  
+
+**Guided by:** *[Guide/Faculty Name]*  
+
+**Institution:** *[College/School Name]*  
+
+**Academic Year:** *[Year]*
+
+---
+
+## 2. Abstract
+
+SmartStudy Hub is a full‑stack web application designed to help students plan their studies, manage tasks, and track their daily study habits. The system allows users to register and log in securely, create and organize subjects, manage tasks with priorities and due dates, and record study sessions using an interactive timer. All data is stored in a MySQL database and processed through PHP on the server side, while HTML, CSS, and JavaScript are used on the client side for an interactive user interface.
+
+A unique feature of SmartStudy Hub is the habit tracking and gamification module. The application automatically calculates a user’s daily study streak and awards badges based on cumulative study time, number of study sessions, and streak length. An analytics section provides insights into total time spent per subject and task completion rates, presented through tables and a simple custom chart.
+
+The project demonstrates complete CRUD operations, session management, AJAX‑based communication, and basic data analytics, making it a comprehensive full‑stack project suitable for academic evaluation and real‑world use.
+
+---
+
+## 3. Introduction
+
+### 3.1 Background
+
+Students often struggle to stay consistent with studies, especially when managing multiple subjects, assignments, and exams. Traditional methods like physical diaries or basic to‑do apps do not provide insights into actual time spent studying or patterns in daily performance.
+
+With the increasing accessibility of web technologies, it is possible to build applications that help students:
+
+- Plan their work
+- Visualize progress
+- Stay motivated through gamification
+
+### 3.2 Problem Statement
+
+Existing simple note‑taking or to‑do applications lack:
+
+- Structured subject‑wise organization
+- Study time tracking
+- Habit streak tracking
+- Badges and achievements to keep motivation high
+
+There is a need for a centralized web platform where students can manage their subjects and tasks, track actual study time, and receive feedback and rewards based on their efforts.
+
+### 3.3 Objectives
+
+The main objectives of SmartStudy Hub are:
+
+- To provide a secure, user‑friendly web interface for students to manage their study activities.
+- To support subject and task management with priorities and due dates.
+- To track study sessions using a timer and store duration details in the database.
+- To calculate daily streaks and overall study statistics.
+- To implement a badge system that rewards users for their consistency and effort.
+- To present analytics that help users understand their study patterns.
+
+---
+
+## 4. System Requirements
+
+### 4.1 Hardware Requirements
+
+- Processor: Dual Core or higher
+- RAM: Minimum 4 GB
+- Storage: At least 1 GB free disk space
+- Display: 1024×768 resolution or higher
+
+### 4.2 Software Requirements
+
+- Operating System: Windows / Linux / macOS
+- Web Server: Apache (e.g., XAMPP, WAMP)
+- Backend: PHP 7.x or above
+- Database: MySQL / MariaDB
+- Browser: Any modern browser (Chrome, Firefox, Edge, etc.)
+- Code Editor: VS Code / Sublime Text / Notepad++
+
+---
+
+## 5. Existing System vs Proposed System
+
+### 5.1 Existing System
+
+Many students currently use:
+
+- Paper planners or notebooks
+- Basic mobile to‑do lists
+- Simple calendar reminders
+
+**Limitations of the existing system:**
+
+- No automatic calculation of study time.
+- No visualization of how much time was spent per subject.
+- No concept of streaks or achievements.
+- Data is scattered and not centralized.
+
+### 5.2 Proposed System
+
+SmartStudy Hub is a centralized web solution that offers:
+
+- User‑based login and secure data storage.
+- Subject‑wise management and task tracking.
+- Timer‑based study session tracking.
+- Automatic calculation of daily streaks and total study minutes.
+- A badge system for motivation.
+- Analytics to show completion percentages and time distribution.
+
+**Advantages:**
+
+- Accessible from any device with a browser.
+- Structured and organized information.
+- Encourages consistent daily study through streaks and badges.
+- Provides useful insights to plan better.
+
+---
+
+## 6. System Design
+
+### 6.1 Overall Architecture
+
+SmartStudy Hub follows the classic **client‑server** architecture:
+
+- **Client Side:**
+    - HTML for structure
+    - CSS for styling (responsive layout, cards, tables)
+    - JavaScript for timer logic, AJAX calls, and basic chart rendering
+- **Server Side:**
+    - PHP for business logic, input validation, session handling, and database interaction
+- **Database:**
+    - MySQL for persistent storage of users, subjects, tasks, study sessions, and badges
+
+Communication between client and server happens via HTTP and, for some features (like saving a study session), via **AJAX** (`fetch()` in JavaScript calling a PHP endpoint).
+
+### 6.2 Major Modules
+
+1. **User Authentication Module**
+    - Handles registration, login, and logout.
+    - Uses password hashing for security.
+    - Uses PHP sessions to maintain logged‑in state.
+2. **Subjects Module**
+    - Allows users to create, view, and delete subjects.
+    - Each subject stores a name, description, and target hours per week.
+3. **Tasks Module**
+    - Allows creation and viewing of tasks linked to subjects.
+    - Each task has title, description, due date, priority, and status.
+    - Supports marking tasks as completed.
+4. **Study Sessions Module**
+    - Provides a timer interface.
+    - Uses JavaScript to start/stop timing and communicate with the server via AJAX.
+    - Stores duration, subject, date, and timestamp in the database.
+5. **Analytics Module**
+    - Shows total study minutes per subject.
+    - Shows number of tasks and completed tasks per subject.
+    - Calculates completion percentage for each subject.
+6. **Streak & Badge Module (Unique Feature)**
+    - Calculates current daily streak based on study sessions on consecutive days.
+    - Tracks total minutes and total number of sessions.
+    - Awards badges stored in `badges` and `user_badges` tables.
+    - Displays badges on the dashboard and profile.
+
+### 6.3 Database Design
+
+**1. `users`**
+
+- `id` (INT, PK, AI)
+- `name` (VARCHAR)
+- `email` (VARCHAR, UNIQUE)
+- `password` (VARCHAR, hashed)
+- `role` (ENUM: student/teacher)
+- `created_at` (DATETIME)
+
+**2. `subjects`**
+
+- `id` (INT, PK, AI)
+- `user_id` (INT, FK → [users.id](http://users.id))
+- `name` (VARCHAR)
+- `description` (TEXT)
+- `target_hours_per_week` (INT)
+- `created_at` (DATETIME)
+
+**3. `tasks`**
+
+- `id` (INT, PK, AI)
+- `user_id` (INT, FK)
+- `subject_id` (INT, FK → [subjects.id](http://subjects.id))
+- `title` (VARCHAR)
+- `description` (TEXT)
+- `due_date` (DATE)
+- `priority` (ENUM: Low/Medium/High)
+- `status` (ENUM: Pending/In Progress/Completed)
+- `created_at` (DATETIME)
+
+**4. `study_sessions`**
+
+- `id` (INT, PK, AI)
+- `user_id` (INT, FK)
+- `subject_id` (INT, FK)
+- `date` (DATE)
+- `duration_minutes` (INT)
+- `created_at` (DATETIME)
+
+**5. `badges`**
+
+- `id` (INT, PK, AI)
+- `slug` (VARCHAR, UNIQUE)
+- `name` (VARCHAR)
+- `description` (TEXT)
+
+**6. `user_badges`**
+
+- `id` (INT, PK, AI)
+- `user_id` (INT, FK → [users.id](http://users.id))
+- `badge_id` (INT, FK → [badges.id](http://badges.id))
+- `earned_at` (DATETIME)
+
+*(In your printed report you can also include an ER diagram drawn from this.)*
+
+---
+
+## 7. Implementation Details
+
+### 7.1 Technologies Used
+
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** PHP
+- **Database:** MySQL
+- **AJAX:** JavaScript `fetch()` to call PHP endpoints
+
+### 7.2 Important Files and Their Roles
+
+- `includes/db.php`
+    - Contains PDO connection code to MySQL.
+- `includes/auth.php`
+    - Functions for login checks and session control.
+- `includes/stats.php`
+    - Functions to compute streak, totals, and award badges.
+- `includes/header.php` / `includes/footer.php`
+    - Common layout (navigation bar and footer).
+- `public/index.php`
+    - Login page.
+- `public/register.php`
+    - Registration page.
+- `public/dashboard.php`
+    - Shows overview cards, streak, chart, and badges.
+- `public/subjects.php`
+    - Allows CRUD (add, view, delete) for subjects.
+- `public/tasks.php`
+    - Allows adding tasks and marking them as completed.
+- `public/study_sessions.php`
+    - Provides timer UI and shows recent sessions.
+- `public/analytics.php`
+    - Shows subject‑wise analytics.
+- `public/profile.php`
+    - Shows user details and earned badges.
+- `ajax/save_session.php`
+    - AJAX endpoint called from JavaScript to save a study session and trigger badge checks.
+- `assets/css/style.css`
+    - Visual styling for layout, tables, cards, and forms.
+- `assets/js/timer.js`
+    - Timer logic and AJAX call to save sessions.
+
+### 7.3 Security Considerations
+
+- **Password Security:**
+    - Uses `password_hash()` and `password_verify()` in PHP to store and check passwords securely.
+- **SQL Injection Protection:**
+    - Uses prepared statements with placeholders (`?`) in all database queries.
+- **Session Management:**
+    - Uses `$_SESSION` to store `user_id` and `user_name`.
+    - All internal pages call `checkLogin()` to prevent unauthorized access.
+
+### 7.4 User Interface and Navigation
+
+- **Top Navigation Bar** shows links to:
+    - Dashboard
+    - Subjects
+    - Tasks
+    - Study Sessions
+    - Analytics
+    - Profile
+    - Logout
+- **Dashboard** presents:
+    - Total subjects
+    - Pending tasks
+    - Today’s study minutes
+    - Current streak and overall totals
+    - Study chart for last 7 days
+    - List of earned badges
+- **Subjects Page:**
+    - Form to add a subject.
+    - Table listing existing subjects with delete option.
+- **Tasks Page:**
+    - Form to create a task linked to a subject.
+    - Table of tasks with subject name, due date, priority, and status.
+    - Option to mark tasks as completed.
+- **Study Sessions Page:**
+    - Dropdown to select subject.
+    - Start/Stop buttons for a JavaScript timer.
+    - Display of elapsed time.
+    - Table of recent sessions.
+- **Analytics Page:**
+    - Table with subject, total study minutes, number of tasks vs completed, and completion percentage.
+- **Profile Page:**
+    - Displays user information and list of badges earned.
+
+---
+
+## 8. Testing
+
+### 8.1 Test Plan
+
+The application was tested using the following methods:
+
+- **Unit Testing:**
+    - Testing individual modules such as registration, login, subject addition, task creation, and session saving.
+- **Integration Testing:**
+    - Ensuring the proper flow between modules, for example:
+        - A study session saved via AJAX appears in sessions list and updates analytics.
+        - Badge awarding works after multiple sessions.
+- **Validation Testing:**
+    - Verifying that required fields are not left empty.
+    - Ensuring invalid input (e.g., negative minutes) is rejected server‑side.
+
+### 8.2 Sample Test Cases
+
+1. **User Registration**
+    - Input: Valid name, email, matching passwords.
+    - Expected: New user created and redirected to login with success message.
+2. **Login with Incorrect Password**
+    - Input: Existing email, wrong password.
+    - Expected: Error message “Invalid email or password.”
+3. **Add Subject**
+    - Input: Subject name and optional description.
+    - Expected: Subject appears in subject list and is available in tasks and timer dropdown.
+4. **Add Study Session**
+    - Action: Start timer, stop after a few minutes.
+    - Expected: Session saved, appears in sessions list, dashboard stats and analytics updated.
+5. **Badges**
+    - Action: Complete first study session.
+    - Expected: “First Session” badge awarded and visible on dashboard/profile.
+
+---
+
+## 9. Results
+
+The SmartStudy Hub application successfully meets its objectives:
+
+- Users can create accounts, log in securely, and manage their own data.
+- Subjects and tasks can be created and organized easily.
+- Study sessions are recorded with accurate timestamps and durations.
+- The system calculates and displays:
+    - Total study time
+    - Last 7 days study chart
+    - Current streak
+    - Subject‑wise analytics
+- The badge system adds a gamification layer, rewarding users for:
+    - First study session
+    - Number of sessions
+    - Total minutes studied
+    - Maintaining a 7‑day streak
+
+Overall, the system is stable, easy to use, and provides meaningful help for students to track and improve their study habits.
+
+---
+
+## 10. Conclusion
+
+SmartStudy Hub demonstrates a complete full‑stack web application built using HTML, CSS, JavaScript, PHP, and MySQL. It not only covers the core concepts like CRUD operations, authentication, and database interaction but also adds unique and modern features like streak tracking and badges.
+
+The project proves that small, focused web applications can significantly improve daily productivity and motivation. It also serves as a strong academic example of how front‑end and back‑end technologies can be integrated to create a useful real‑world system.
+
+---
+
+## 11. Future Scope
+
+Some possible enhancements include:
+
+- Adding calendar view for tasks and study sessions.
+- Integrating email or push notifications for upcoming deadlines.
+- Allowing users to export their analytics as PDF or Excel.
+- Implementing a simple social component where users can compare streaks with friends.
+- Building a mobile‑friendly or PWA (Progressive Web App) version.

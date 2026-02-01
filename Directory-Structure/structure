@@ -1,0 +1,30 @@
+smartstudyhub/                      ← Project root
+
+	assets/
+		css/
+			style.css
+
+		js/
+			main.js
+			timer.js
+
+	includes/
+		db.php
+		auth.php
+		stats.php
+		header.php
+		footer.php
+
+	public/
+		index.php
+		register.php
+		logout.php
+		dashboard.php
+		subjects.php
+		tasks.php
+		study_sessions.php
+		analytics.php
+		profile.php
+
+	ajax/
+		save_session.php
